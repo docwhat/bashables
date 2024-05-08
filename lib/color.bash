@@ -4,7 +4,7 @@
 # Color variables for 256 & 24 bit xterm-style terminals.
 
 # A guard to prevent re-sourcing.
-if [[ -n ${_bashables_color_is_sourced:-} ]]; then
+if [[ -n ${_bashables_color_is_sourced-} ]]; then
 	return
 fi
 _bashables_color_is_sourced=true
@@ -33,11 +33,11 @@ else
 fi
 
 # This might be replaced with a unit-test frame work.
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
 	echo "${bold}Example Colors ${COLORTERM:-"256 color"}${reset}"
 
 	for color in black red green yellow blue magenta cyan white grey; do
-		if [[ $color == "black" ]]; then
+		if [[ ${color} == "black" ]]; then
 			bg=${white_bg}
 		else
 			bg=${black_bg}
