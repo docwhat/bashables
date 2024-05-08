@@ -3,7 +3,7 @@
 # Color functions
 
 # A guard to prevent re-sourcing.
-if [[ -n ${_bashables_color_functions_is_sourced:-} ]]; then
+if [[ -n ${_bashables_color_functions_is_sourced-} ]]; then
 	return
 fi
 _bashables_color_functions_is_sourced=true
