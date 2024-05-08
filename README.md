@@ -1,2 +1,21 @@
+<div id=badges align=center>
+    <a href=https://app.trunk.io/docwhat-github/docwhat/bashables/ci-analytics>CI Analytics at trunk.io</a>
+</div>
+
 # bashables
-A library of bash code, scripts, and examples for use when writing your own utilities.
+
+> A library of bash code, scripts and examples for use when writing your own utilities.
+
+## Contributing
+
+After cloning this repository, run `script/bootstrap` to get ensure you have all the tools you need. 
+
+<style>
+#badges a {
+    background-color: red;
+    color: white;
+    padding: 4px 8px;
+    text-align: center;
+    border-radius: 5px;
+}
+</style>
