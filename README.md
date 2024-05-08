@@ -8,14 +8,4 @@
 
 ## Contributing
 
-After cloning this repository, run `script/bootstrap` to get ensure you have all the tools you need. 
-
-<style>
-#badges a {
-    background-color: red;
-    color: white;
-    padding: 4px 8px;
-    text-align: center;
-    border-radius: 5px;
-}
-</style>
+After cloning this repository, run `script/bootstrap` to get ensure you have all the tools you need.
