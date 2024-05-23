@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# bash -n in the minimal check for bash scripts.
+for file in lib/*.bash; do
+  bash -n "${file}"
+done
+
+trunk check --all
+
+# EOF

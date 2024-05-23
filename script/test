@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+find . -type f \
+  \( -name '*.bash' -o -name '*.bats' \) \
+  -not \
+  \( -path './tests/test_helper/*' -o -path './tmp/*' \) \
+  -print0 |
+  xargs -0 --no-run-if-empty shellcheck --check-sourced
+
+bats tests
+
+# EOF

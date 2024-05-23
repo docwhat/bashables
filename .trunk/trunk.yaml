@@ -27,6 +27,10 @@ lint:
     - trivy@0.51.1
     - trufflehog@3.75.1
     - yamllint@1.35.1
+  ignore:
+    - linters: [ALL]
+      paths:
+        - tests/test_helper/**
 actions:
   enabled:
     - trunk-announce
