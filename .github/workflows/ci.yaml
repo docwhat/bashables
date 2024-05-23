@@ -1,0 +1,34 @@
+# GitHub Action to run all my CI tasks.
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches: [main]
+  push: {}
+  workflow_dispatch: {}
+
+permissions: read-all
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bats and bats libs
+        uses: bats-core/bats-action@2.0.0
+        with:
+          detik-install: false
+          support-install: false
+          assert-install: false
+          file-install: false
+
+      - name: Bootstrap Check
+        run: ./script/bootstrap
+
+      - name: Lint Check
+        run: ./script/lint
+
+      - name: Tests
+        run: ./script/test
