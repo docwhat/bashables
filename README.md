@@ -14,5 +14,5 @@ After cloning this repository, run `script/bootstrap` to get ensure you have all
 
 This project uses several tools to ensure high quality:
 
-- [bats-core](https://bats-core.readthedocs.io/)
-- [trunk.io](https://docs.trunk.io)
+-   [bats-core](https://bats-core.readthedocs.io/)
+-   [trunk.io](https://docs.trunk.io)

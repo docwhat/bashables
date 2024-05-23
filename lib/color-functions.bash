@@ -4,7 +4,7 @@
 
 # A guard to prevent re-sourcing.
 if [[ -n ${_bashables_color_functions_is_sourced-} ]]; then
-	return
+  return
 fi
 _bashables_color_functions_is_sourced=true
 
@@ -19,5 +19,5 @@ _bashables_color_functions_is_sourced=true
 # @param {number} $3 - Blue value.
 # @return {number} The 256 color code.
 convert_true_color_to_256() {
-	awk "BEGIN { printf \"%d\\n\", ($1 * 6.0 / 256) * 36 + ($2 * 6.0 / 256) * 6 + ($3 * 6.0 / 256) }"
+  awk "BEGIN { printf \"%d\\n\", ($1 * 6.0 / 256) * 36 + ($2 * 6.0 / 256) * 6 + ($3 * 6.0 / 256) }"
 }
