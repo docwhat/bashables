@@ -2,11 +2,14 @@
 
 set -euo pipefail
 
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
 # bash -n in the minimal check for bash scripts.
 for file in lib/*.bash; do
   bash -n "${file}"
 done
 
-trunk check --all
+script/trunk fmt --all
+script/trunk check --all
 
 # EOF
