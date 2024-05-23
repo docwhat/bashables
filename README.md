@@ -1,6 +1,5 @@
-<div id=badges align=center>
-    <a href=https://app.trunk.io/docwhat-github/docwhat/bashables/ci-analytics>CI Analytics at trunk.io</a>
-</div>
+-   [CI Analytics at trunk.io](https://app.trunk.io/docwhat-github/docwhat/bashables/ci-analytics)
+-   [![Continuous Integration](https://github.com/docwhat/bashables/actions/workflows/ci.yaml/badge.svg)](https://github.com/docwhat/bashables/actions/workflows/ci.yaml)
 
 # bashables
 
