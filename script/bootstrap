@@ -25,22 +25,79 @@ instructions() {
 	echo -e "  \033[33m${1}\033[0m"
 }
 
+declare _os # memoize OS
+# os tries to detect the Operating System.
+os() {
+	if [[ -z ${_os} ]]; then
+		case "$(uname -s)" in
+		Darwin) _os="macos" ;;
+		Linux)
+			if [[ -f /etc/os-release ]]; then
+				_os=$(sh -c '. /etc/os-release; printf "%s" "${ID}"')
+			else
+				echo _os="linux"
+			fi
+			;;
+		*) _os="unknown" ;;
+		esac
+	fi
+	printf "%s" "${_os}"
+}
+
 "${root}/script/trunk" install --no-progress >/dev/null
 success "trunk"
 
-if ! has bats; then
+## BATS-CORE
+############################################################
+has_bats=0
+if has bats; then
+	bats_version=$(bats --version 2>/dev/null)
+	if [[ ${bats_version} == *"Bats 1"* ]]; then
+		has_bats=1
+	fi
+fi
+
+if ((has_bats)); then
 	success "bats-core"
 else
 	failure "missing bats-core"
-	instructions "Please install bats-core."
+	instructions "Please install bats-core 1.x."
 	instructions "  https://bats-core.readthedocs.io/en/stable/installation.html"
 
-	case "$(uname -s)" in
-	Darwin)
+	case "$(os)" in
+	macos)
 		instructions "For example, on macOS, you can use Homebrew:"
 		instructions "  brew install bats-core"
 		;;
+	ubuntu | debian)
+		instructions "For example, on Ubuntu or Debian, you can use:"
+		instructions "  sudo apt-get install bats"
+		;;
 	*) ;;
+	esac
+fi
+
+## SCRIPT
+############################################################
+if ! has script; then
+	failure "missing script"
+	instructions "Please install script(1)."
+	case "$(os)" in
+	ubuntu | debian)
+		instructions "On Ubuntu or Debian, you can use:"
+		instructions "  sudo apt-get install bsdutils"
+		;;
+	fedora)
+		instructions "On Fedora, you can use:"
+		instructions "  sudo dnf install util-linux"
+		;;
+	alpine)
+		instructions "On Alpine, you can use:"
+		instructions "  sudo apk add util-linux"
+		;;
+	*)
+		instructions "Check the documentation for your platform."
+		;;
 	esac
 fi
 
