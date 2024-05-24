@@ -9,7 +9,12 @@ for file in lib/*.bash; do
   bash -n "${file}"
 done
 
-script/trunk fmt --all
-script/trunk check --all
+trunk_args=(--all)
+if [[ -n ${CI-} ]]; then
+  trunk_args+=(--ci)
+fi
+
+script/trunk fmt "${trunk_args[@]}"
+script/trunk check "${trunk_args[@]}"
 
 # EOF

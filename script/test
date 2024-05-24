@@ -4,13 +4,21 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
+xargs_args=(-0 --no-run-if-empty)
+bats_args=(--jobs 400)
+
+if [[ -n ${CI-} ]]; then
+  xargs_args+=(-t)
+  bats_args+=(--print-output-on-failure --pretty)
+fi
+
 find . -type f \
   \( -name '*.bash' -o -name '*.bats' \) \
   -not \
   \( -path './tests/test_helper/*' -o -path './tmp/*' \) \
   -print0 |
-  xargs -0 --no-run-if-empty shellcheck --check-sourced
+  xargs "${xargs_args[@]}" shellcheck --check-sourced
 
-bats tests
+bats "${bats_args[@]}" tests
 
 # EOF
