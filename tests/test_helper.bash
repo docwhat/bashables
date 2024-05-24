@@ -28,7 +28,7 @@ fake-tty() {
 
   # Produce a script that runs the command provided to faketty as
   # arguments and stores the status code in the temporary file
-  cmd="$(printf '%q ' "$@"); echo \$? > ${tmp}"
+  cmd="$(printf '%q ' "$@"); echo \$? > $(printf '%q' "${tmp}")"
 
   # Run the script through /bin/sh with fake tty
   if [[ "$(uname -s || :)" == "Darwin" ]]; then
