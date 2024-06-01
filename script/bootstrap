@@ -6,23 +6,34 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 readonly root
 
-readonly checkmark=$'\033[0;32m✔\033[0m'
-readonly crossmark=$'\033[0;31m✘\033[0m'
+readonly red=$'\033[31m'
+readonly green=$'\033[32m'
+readonly yellow=$'\033[33m'
+readonly gray=$'\033[90m'
+readonly bold=$'\033[1m'
+readonly reset=$'\033[0m'
+
+readonly checkmark="${green}✔${reset}"
+readonly crossmark="${red}✘${reset}"
 
 has() {
   command -v "$1" >/dev/null 2>&1
 }
 
 success() {
-  echo -e "${checkmark} \033[32m${1}\033[0m"
+  printf "%s %s%s%s\n" "${checkmark}" "${green}${bold}" "$1" "${reset}"
 }
 
 failure() {
-  echo -e "${crossmark} \033[31m${1}\033[0m"
+  printf "%s %s%s%s\n" "${crossmark}" "${red}${bold}" "$1" "${reset}"
 }
 
 instructions() {
-  echo -e "  \033[33m${1}\033[0m"
+  printf "  %s%s%s\n" "${yellow}${bold}" "$1" "${reset}"
+}
+
+instructional_command() {
+  printf "    %s%s%s\n" "${gray}" "$1" "${reset}"
 }
 
 declare _os # memoize OS
