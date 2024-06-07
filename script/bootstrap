@@ -36,7 +36,7 @@ instructional_command() {
   printf "    %s%s%s\n" "${gray}" "$1" "${reset}"
 }
 
-declare _os # memoize OS
+declare _os='' # memoize OS
 # os tries to detect the Operating System.
 os() {
   if [[ -z ${_os} ]]; then
