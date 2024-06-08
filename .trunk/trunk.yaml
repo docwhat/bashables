@@ -32,7 +32,7 @@ lint:
   ignore:
     - linters: [ALL]
       paths:
-        - tests/test_helper/**
+        - vendor/**
 actions:
   enabled:
     - trunk-announce
