@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 bats_command=(
-  vendor/bats-core-1.11.0/bin/bats
+  vendor/bats-core/bin/bats
 )
 
 if command -v parallel &>/dev/null; then
