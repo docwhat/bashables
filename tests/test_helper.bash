@@ -2,9 +2,9 @@
 # shellcheck disable=SC2034
 
 load-helpers() {
-  load "${BASHABLE_GIT_ROOT}/vendor/bats-assert-2.1.0/load"
-  load "${BASHABLE_GIT_ROOT}/vendor/bats-file-0.4.0/load"
-  load "${BASHABLE_GIT_ROOT}/vendor/bats-support-0.3.0/load"
+  load "${BASHABLE_GIT_ROOT}/vendor/bats-assert/load"
+  load "${BASHABLE_GIT_ROOT}/vendor/bats-file/load"
+  load "${BASHABLE_GIT_ROOT}/vendor/bats-support/load"
 }
 
 BASHABLE_GIT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
