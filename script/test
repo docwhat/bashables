@@ -4,6 +4,9 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
+# Ensure TERM is set to _something_.
+export TERM="${TERM:-dumb}"
+
 bats_command=(
   vendor/bats-core/bin/bats
 )
