@@ -84,7 +84,7 @@ fi
 ## Trunk.IO
 ############################################################
 printf '\n%sInstalling Trunk%s\n' "${bold}" "${reset}"
-if "${root}/script/trunk" install --no-progress; then
+if "${root}/script/trunk" install; then
   success "trunk is installed"
 else
   failure "unable to install trunk"

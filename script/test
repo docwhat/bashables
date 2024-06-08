@@ -6,11 +6,14 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 bats_command=(
   vendor/bats-core-1.11.0/bin/bats
-  --jobs 4
 )
 
+if command -v parallel &>/dev/null; then
+  bats_command+=("${bats_command[@]:+"${bats_command[@]}"}" --jobs 4)
+fi
+
 if [[ -n ${CI-} ]]; then
-  bats_command+=(--print-output-on-failure --pretty)
+  bats_command+=("${bats_command[@]:+"${bats_command[@]}"}" --print-output-on-failure --pretty)
 fi
 
 "${bats_command[@]}" tests
