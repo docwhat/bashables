@@ -6,34 +6,37 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 readonly root
 
-readonly red=$'\033[31m'
-readonly green=$'\033[32m'
-readonly yellow=$'\033[33m'
-readonly gray=$'\033[90m'
-readonly bold=$'\033[1m'
-readonly reset=$'\033[0m'
+red=$(tput setaf 1 2>/dev/null || :)
+green=$(tput setaf 2 2>/dev/null || :)
+yellow=$(tput setaf 3 2>/dev/null || :)
+readonly red green yellow
+
+bold=$(tput bold 2>/dev/null || :)
+reset=$(tput sgr0 2>/dev/null || :)
+readonly bold reset
 
 readonly checkmark="${green}✔${reset}"
 readonly crossmark="${red}✘${reset}"
+
+failure=0
+success=0
 
 has() {
   command -v "$1" >/dev/null 2>&1
 }
 
 success() {
+  success=$((success + 1))
   printf "%s %s%s%s\n" "${checkmark}" "${green}${bold}" "$1" "${reset}"
 }
 
 failure() {
+  failure=$((failure + 1))
   printf "%s %s%s%s\n" "${crossmark}" "${red}${bold}" "$1" "${reset}"
 }
 
 instructions() {
   printf "  %s%s%s\n" "${yellow}${bold}" "$1" "${reset}"
-}
-
-instructional_command() {
-  printf "    %s%s%s\n" "${gray}" "$1" "${reset}"
 }
 
 declare _os='' # memoize OS
@@ -55,88 +58,47 @@ os() {
   printf "%s" "${_os}"
 }
 
-"${root}/script/trunk" install --no-progress >/dev/null
-success "trunk"
-
-## BATS-CORE
+## CURL
 ############################################################
-has_bats=0
-if has bats; then
-  bats_version=$(bats --version 2>/dev/null)
-  if [[ ${bats_version} == *"Bats 1"* ]]; then
-    has_bats=1
-  fi
-fi
-
-if ((has_bats)); then
-  success "bats-core"
+if has curl; then
+  success "curl is installed"
 else
-  failure "missing bats-core"
-  instructions "Please install bats-core 1.x."
-  instructions "  https://bats-core.readthedocs.io/en/stable/installation.html"
-
+  failure "missing curl"
+  instructions "Please install curl."
   case "$(os)" in
-  macos)
-    instructions "For example, on macOS, you can use Homebrew:"
-    instructions "  brew install bats-core"
-    ;;
   ubuntu | debian)
-    instructions "For example, on Ubuntu or Debian, you can use:"
-    instructions "  sudo apt-get install bats"
+    instructions "On Ubuntu or Debian, you can use:"
+    instructions "  sudo apt-get install curl"
+    ;;
+  fedora)
+    instructions "On Fedora, you can use:"
+    instructions "  sudo dnf install curl"
+    ;;
+  macos)
+    die "On macOS, you should already have curl installed."
     ;;
   *) ;;
   esac
 fi
 
-## SCRIPT
+## Trunk.IO
 ############################################################
-if ! has script; then
-  failure "missing script"
-  instructions "Please install script(1)."
-  case "$(os)" in
-  ubuntu | debian)
-    instructions "On Ubuntu or Debian, you can use:"
-    instructions "  sudo apt-get install bsdutils"
-    ;;
-  fedora)
-    instructions "On Fedora, you can use:"
-    instructions "  sudo dnf install util-linux"
-    ;;
-  alpine)
-    instructions "On Alpine, you can use:"
-    instructions "  sudo apk add util-linux"
-    ;;
-  *)
-    instructions "Check the documentation for your platform."
-    ;;
-  esac
+printf '\n%sInstalling Trunk%s\n' "${bold}" "${reset}"
+if "${root}/script/trunk" install --no-progress; then
+  success "trunk is installed"
+else
+  failure "unable to install trunk"
 fi
 
-## shellcheck
-############################################################
-if ! has shellcheck; then
-  failure "missing shellcheck"
-  case "$(os)" in
-  ubuntu | debian)
-    instructions "On Ubuntu or Debian, you can use:"
-    instructions "  sudo apt-get install shellcheck"
-    ;;
-  fedora)
-    instructions "On Fedora, you can use:"
-    instructions "  sudo dnf install ShellCheck"
-    ;;
-  alpine)
-    instructions "On Alpine, you can use:"
-    instructions "  sudo apk add shellcheck"
-    ;;
-  *)
-    instructions "Please install shellcheck."
-    instructions "Check the documentation for your platform."
-    ;;
-  esac
-fi
+printf '\nsuccesss: %s%d%s  failures: %s%d%s\n' "${green}" "${success}" "${reset}" "${red}" "${failure}" "${reset}"
 
-echo
-echo $'\033[0;32mDone! 🎉\033[0m'
+if ((failure > 0)); then
+  printf '\n%sBootstrap failed!%s\n' "${red}" "${reset}"
+  printf '%sPlease resolve the above issues.%s\n' "${yellow}" "${reset}"
+  exit 1
+else
+  printf '\n%sSuccess! 🎉%s\n' "${green}" "${reset}"
+  exit 0
+fi
 
 # EOF
