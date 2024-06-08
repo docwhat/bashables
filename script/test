@@ -9,11 +9,11 @@ bats_command=(
 )
 
 if command -v parallel &>/dev/null; then
-  bats_command+=("${bats_command[@]:+"${bats_command[@]}"}" --jobs 4)
+  bats_command=("${bats_command[@]:+"${bats_command[@]}"}" --jobs 4)
 fi
 
 if [[ -n ${CI-} ]]; then
-  bats_command+=("${bats_command[@]:+"${bats_command[@]}"}" --print-output-on-failure --pretty)
+  bats_command=("${bats_command[@]:+"${bats_command[@]}"}" --print-output-on-failure --pretty)
 fi
 
 "${bats_command[@]}" tests
