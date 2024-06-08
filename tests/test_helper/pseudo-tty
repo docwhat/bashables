@@ -1,29 +1,39 @@
-#!/usr/bin/env perl
+#!/usr/bin/env bash
 
-# Use strict mode.
-$| = 1;
+set -euo pipefail
 
-use IO::Pty;
+dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-my $pty = new IO::Pty;
-defined( my $child = fork ) or exit 126;
+# Why is this so complicated?
+#
+# In order to test the detection of TTYs, I need to some how force
+# a TTY.
+#
+# There are a lot of hacky ways to do this and this is what
+# I came up with.
+#
+# If you have a better technique, please share it with me.
 
-if ($child) {
-  $pty->close_slave();
-  while (<$pty>) { }
-  wait();
+progs=(
+  "${dir}/pseudo-tty.py"
+  "${dir}/pseudo-tty.pl"
+)
 
-  exit 126 if ( $? == -1 );
-  exit( $? >> 8 );
-}
-else {
-  POSIX::setsid();
-  close($pty);
+for prog in "${progs[@]}"; do
+  if "${prog}" true >/dev/null 2>&1; then
+    exec "${prog}" "$@"
+  fi
+done
 
-  STDOUT->fdopen( $pty->slave, '>' ) || die $!;
-  STDERR->fdopen( \*STDOUT,    '>' ) || die $!;
+for prog in "${progs[@]}"; do
+  printf -- '\n'
+  printf -- '---------------------->8------- CUT HERE -------8<----------------------\n'
+  printf -- 'Errors for %s\n' "${prog}"
+  "${prog}" true 2>&1 || true
+  printf -- '---------------------->8------- CUT HERE -------8<----------------------\n'
+done >&2
 
-  exec(@ARGV) || die "Can't exec @ARGV: $!";
-}
+printf '\nUnable to find a way to run pseudo-tty.\n' >&2
+exit 1
 
 # EOF
