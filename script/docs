@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly root
+
+cd "${root}"
+
+files=()
+
+rm -rf "docs"
+mkdir -p "docs"
+
+for script in "lib"/*.bash; do
+  filename="$(basename "${script}" .bash).md"
+  doc="docs/${filename}"
+
+  printf "Generating documentation for %s\n" "${script}"
+  printf "  writing to %s\n" "${doc}"
+  gawk -f "${root}/vendor/shdoc/shdoc" <"${script}" >"${doc}"
+
+  words=$(wc -w "${doc}" | gawk '{print $1}')
+  if ((words < 2)); then
+    rm -f "${doc}"
+  else
+    files=("${files[@]:+"${files[@]}"}" "${filename}")
+  fi
+done
+
+{
+  printf '# Documentation\n\n'
+  printf '## Table of Contents\n\n'
+
+  for filename in "${files[@]}"; do
+    printf ' - [%s](%s)\n' "${filename}" "${filename}"
+  done
+} >"${root}/docs/index.md"
+
+# EOF

@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-# Color variables for 256 & 24 bit xterm-style terminals.
+# @file color.bash
+# @brief Color variables for 256 & 24 bit xterm-style terminals.
+#
+# @description
+# Provides variables to be used for coloring terminal output.
+#
+# ```sh
+# echo "${red}${bg}This is \$red."
+# echo "${green}${bold}This is \$bold \$green."
+# echo "${reset}"
+# ```
 
 # A guard to prevent re-sourcing.
 if [[ -n ${_bashables_color_is_sourced-} ]]; then

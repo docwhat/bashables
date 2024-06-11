@@ -81,6 +81,30 @@ else
   esac
 fi
 
+## Gawk
+############################################################
+if has gawk; then
+  success "gawk is installed"
+else
+  failure "missing gawk"
+  instructions "Please install gawk."
+  case "$(os)" in
+  ubuntu | debian)
+    instructions "On Ubuntu or Debian, you can use:"
+    instructions "  sudo apt-get install gawk"
+    ;;
+  fedora)
+    instructions "On Fedora, you can use:"
+    instructions "  sudo dnf install gawk"
+    ;;
+  macos)
+    instructions "On macOS, you can use:"
+    instructions "  brew install gawk"
+    ;;
+  *) ;;
+  esac
+fi
+
 ## Trunk.IO
 ############################################################
 printf '\n%sInstalling Trunk%s\n' "${bold}" "${reset}"

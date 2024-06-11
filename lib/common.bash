@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
-
-# Common utilities that are useful for all scripts.
+# @file common.bash
+# @brief Common utilities that are useful for all scripts.
 
 # A guard to prevent re-sourcing.
 if [[ -n ${_bashables_common_is_sourced-} ]]; then
@@ -46,6 +46,7 @@ bash_is_at_least() {
   ((bash_major > required_major || (bash_major == required_major && bash_minor >= required_minor)))
 }
 
+# @description
 # normalize_flag_variable takes the name of an exported variable and
 # forces it to be set to 'true' or 'false'.
 #
@@ -53,7 +54,7 @@ bash_is_at_least() {
 #
 # The variable will be exported.
 #
-# @param {string} $variable_name - The name of the variable to normalize and export.
+# @arg $1 string The name of the variable to normalize and export.
 normalize_flag_variable() {
   local variable_name=$1
   if is_flag_variable_true "${variable_name}"; then
@@ -63,10 +64,12 @@ normalize_flag_variable() {
   fi
 }
 
+# @description
 # is_flag_variable_true() returns true if the flag variable is set to 'true'.
 #
-# @param {string} $variable_name - The name of the flag variable to check.
-# @return {boolean} True if the flag variable is set to 'true', 't', '1', 'y', or 'yes'.
+# @arg $1 string The name of the flag variable to check.
+# @exitcode 0 if the flag variable is set to 'true', 't', '1', 'y', or 'yes'.
+# @exitcode 1 otherwise
 is_flag_variable_true() {
   local variable_name=$1
   case "${!variable_name-}" in
