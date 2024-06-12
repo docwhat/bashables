@@ -26,13 +26,15 @@ has() {
 }
 
 success() {
+  printf "%s %s%s%s\n" \
+    "${checkmark}" "${green}${bold}" "$1" "${reset}"
   success=$((success + 1))
-  printf "%s %s%s%s\n" "${checkmark}" "${green}${bold}" "$1" "${reset}"
 }
 
 failure() {
+  printf "%s %s%s%s\n" \
+    "${crossmark}" "${red}${bold}" "$1" "${reset}"
   failure=$((failure + 1))
-  printf "%s %s%s%s\n" "${crossmark}" "${red}${bold}" "$1" "${reset}"
 }
 
 instructions() {
@@ -98,7 +100,7 @@ printf '\nsuccesss: %s%d%s  failures: %s%d%s\n' "${green}" "${success}" "${reset
 
 if ((failure > 0)); then
   printf '\n%sBootstrap failed!%s\n' "${red}" "${reset}"
-  printf '%sPlease resolve the above issues.%s\n' "${yellow}" "${reset}"
+  instructions "  Please fix the issues above and run this script again."
   exit 1
 else
   printf '\n%sSuccess! 🎉%s\n' "${green}" "${reset}"
