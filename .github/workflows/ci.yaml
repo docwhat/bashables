@@ -1,5 +1,6 @@
 # GitHub Action to run all my CI tasks.
-name: Continuous Integration
+name: Run Required Checks
+run-name: PR Checks for ${{ github.ref_name }}
 
 on:
   pull_request:
@@ -10,25 +11,31 @@ on:
 permissions: read-all
 
 jobs:
-  ci:
+  lint:
+    name: Lint Check
     runs-on: ubuntu-latest
     steps:
+      - name: Install perltidy
+        run: sudo apt-get update && sudo apt-get install -y perltidy
+
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Bats and bats libs
-        uses: bats-core/bats-action@2.0.0
-        with:
-          detik-install: false
-          support-install: false
-          assert-install: false
-          file-install: false
 
       - name: Bootstrap Check
         run: ./script/bootstrap
 
       - name: Lint Check
         run: ./script/lint
+
+  unit_tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bootstrap Check
+        run: ./script/bootstrap
 
       - name: Tests
         run: ./script/test
