@@ -1,0 +1,56 @@
+name: Automatically Update Dependencies
+
+# `pull_request_target` grants access to secrets and runs in the scope of the *destination* branch.
+# Specifically we listen for the labelled event.
+on:
+  pull_request_target:
+    types:
+      # Dependabot will label the PR
+      - labeled
+      # Dependabot has rebased the PR
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  enable-dependabot-automerge:
+    name: Enable auto-merge for Dependabot PRs
+    runs-on: ubuntu-latest
+    permissions:
+      # enable-automerge is a graphql query, not REST, so isn't documented,
+      # except in a mention in
+      # https://github.blog/changelog/2021-02-04-pull-request-auto-merge-is-now-generally-available/
+      # which says "can only be enabled by users with permissino to merge"; the
+      # REST documentation says you need contents: write to perform a merge.
+      # https://github.community/t/what-permission-does-a-github-action-need-to-call-graphql-enablepullrequestautomerge/197708
+      # says this is it
+      contents: write
+    # Specifically check the creator of the pull-request, not the actor.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'dependencies')
+
+    steps:
+      - name: Enable GitHub Auto-Merge
+        # Reference by commit SHA as it is an immutable reference to a
+        # known, "trusted" version of this 3rd party code.
+        uses: alexwilson/enable-github-automerge-action@56e3117d1ae1540309dc8f7a9f2825bc3c5f06ff
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  approve-dependabot:
+    needs: enable-dependabot-automerge
+    runs-on: ubuntu-latest
+    permissions:
+      # https://github.com/hmarr/auto-approve-action/issues/183 says
+      # auto-approve-action requires write on pull-requests
+      pull-requests: write
+    # Specifically check the creator of the pull-request, not the actor.
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && contains(github.event.pull_request.labels.*.name, 'dependencies')
+    steps:
+      - name: Approve dependabot PRs
+        # Reference by commit SHA as it is an immutable reference to a
+        # known, "trusted" version of this 3rd party code.
+        uses: hmarr/auto-approve-action@8f929096a962e83ccdfa8afcf855f39f12d4dac7
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+# EOF
