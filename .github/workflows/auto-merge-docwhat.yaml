@@ -1,0 +1,33 @@
+name: Auto-Merge for docwhat
+
+# `pull_request_target` grants access to secrets and runs in the scope of the *destination* branch.
+# Specifically we listen for the labelled event.
+on:
+  pull_request_target:
+    types:
+      - labeled
+
+permissions:
+  contents: read
+
+jobs:
+  enable-auto-merge-for-docwhat:
+    name: Enable Auto-Merge for docwhat
+    runs-on: ubuntu-latest
+    permissions:
+      # enable-automerge is a graphql query, not REST, so isn't documented,
+      # except in a mention in
+      # https://github.blog/changelog/2021-02-04-pull-request-auto-merge-is-now-generally-available/
+      # which says "can only be enabled by users with permissino to merge"; the
+      # REST documentation says you need contents: write to perform a merge.
+      # https://github.community/t/what-permission-does-a-github-action-need-to-call-graphql-enablepullrequestautomerge/197708
+      # says this is it
+      contents: write
+    # Specifically check that dependabot (or another trusted party) created this pull-request, and that it has been labelled correctly.
+    if: github.event.pull_request.user.login == 'docwhat'
+    steps:
+      - name: Enable GitHub Auto-Merge
+        uses: alexwilson/enable-github-automerge-action@56e3117d1ae1540309dc8f7a9f2825bc3c5f06ff
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+# EOF
