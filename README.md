@@ -15,12 +15,12 @@ A lot of projects have tasks or setup that needs to be performed so that the dev
 
 Some examples:
 
-- Installing compilers.
-- Verifying tools are installed and are a compatible version.
-- Checking on the status of software running in the cloud.
-- Authenticating or switching accounts.
-- Running analysis tools.
-- Formatting code according to project standards.
+-   Installing compilers.
+-   Verifying tools are installed and are a compatible version.
+-   Checking on the status of software running in the cloud.
+-   Authenticating or switching accounts.
+-   Running analysis tools.
+-   Formatting code according to project standards.
 
 These utilities must be able to work on a developer's laptop which may be Linux, macOS, BSD, or even WSL (Windows Subsystem for Linux) regardless of what tools they have installed or have not installed.
 
